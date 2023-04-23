@@ -11,6 +11,7 @@
 
 
 import java.io.*;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -19,10 +20,12 @@ public class Final_Test
 {  
 public static void main(String[] args) throws Exception  
 {  
-
+	System.setOut(new PrintStream(new FileOutputStream("dummyXaxis.csv")));
+	//System.out.println("This is test output");
+	
 //parsing a CSV file into Scanner class constructor  
 // This allows us to grab the csv body file from any location within your computer
-Scanner sc = new Scanner(new File("C:\\Users\\cheye\\Downloads\\response.txt"));  
+Scanner sc = new Scanner(new File("C:\\Users\\cheye\\Downloads\\dummyXaxis.txt"));  
 
 // After every string value sets a comma 
 sc.useDelimiter(",");   //sets the delimiter pattern  
@@ -68,8 +71,9 @@ double time = 0.00;
 
 
 // change the rows based on the amount of frames in the data set, columns should stay the same because their are 5 titles
-int rows = 2541; // frames
-int columns = 5; 
+int rows = 151; // frames
+int columns = 5;
+boolean test = true;
 
 // Have the Time variable to display as 2 decimal points 
 final DecimalFormat df = new DecimalFormat("0.00");
@@ -81,114 +85,128 @@ String[][] arraySet = new String[rows][columns];
 String frame = "";
 
 //A while loop to iterate through each value of the file until there is none
-while (sc.hasNext() == true)  //returns a boolean value  
-{  
-	
-	// populate matrix
-	//Starts the matrix at row 1
-	for (int j = 0; j < rows; j++) 
+
+double x = 0.00;	
+double y = 0.00;
+double h = 0.00;
+double w = 0.00;
+//&& test == true
+	while (sc.hasNext() == true )  //returns a boolean value  
 	{
-		// creates a new line
-		System.out.print("\n");
-		// Starts the matrix at [1,0]
-		for(int k = 0; k < columns; k++)
-		{ 
-				// 
-				if (k == 0)
-				{
-					// grabs the first value and save in string file
-					frame = sc.next();
-					// deletes unnessesary value in string
-					frame = frame.replace("{\"frameNumber\":", "");
-					// changes the string to be an integer - optional
-					frames = Double.parseDouble(frame);
-					// sets final value in the arraylist
-					arraySet[j][k] = frame + ",";
-				}
-				if (k == 1)
-				{
-					arraySet[j][k] = frame + ",";
-				}
-				
-				if ( k == 2)
-				{
-					//System.out.print("\t"+ "\t" );
-					time = frames * 1/30;
-					arraySet[j][k] = df.format(time) + " sec,";
-				}
-				
-				if (k == 3)
-				{
-					arraySet[j][k] ="DRONE,";
-				}
-	
-				if (k == 4)
-				{
+	/*	if (count == 1500)
+		{
+			//insert wait for space to be pressed
+			Thread.sleep(count);
+			count=0;
+		}
+		*/
+		// populate matrix
+		//Starts the matrix at row 1
+		for (int j = 0; j < rows; j++) 
+		{
+			// creates a new line
+			System.out.print("\n");
+			// Starts the matrix at [1,0]
+			for(int k = 0; k < columns; k++)
+			{ 
+					// 
+					if (k == 0)
+					{
+						// grabs the first value and save in string file
+						frame = sc.next();
+						// deletes unnessesary value in string
+						frame = frame.replace("{\"frameNumber\":", "");
+						// changes the string to be an integer - optional
+						frames = Double.parseDouble(frame);
+						// sets final value in the arraylist
+						arraySet[j][k] = frame + ",";
+					}
+					if (k == 1)
+					{
+						arraySet[j][k] = frame + ",";
+					}
 					
-					// skips unnescessary columns in the csv file
-					sc.next();
-					sc.next();
-					sc.next();
-					sc.next();
-					sc.next();
-					sc.next();
-					sc.next();
+					if ( k == 2)
+					{
+						//System.out.print("\t"+ "\t" );
+						time = frames * 1/30;
+						arraySet[j][k] = df.format(time) + " sec,";
+					}
 					
-					coord1 = sc.next();
-					
-					//This is set to grab the coordinates from the body
-					// If the coordinates is <100 then if statement is there so the substring will grab the values from two places
-					if (coord1.length() < 17)
-					coord1 = coord1.substring(14,16);
-					else
-						coord1 = coord1.substring(14,17);
-					double c1 = Double.parseDouble(coord1);
-					coord1 = df.format(c1);
-					
-					
-					coord2 = sc.next();
-					if (coord2.length() < 10)
-						coord2 = coord2.substring(7,9);
-						else
-							coord2 = coord2.substring(7,10);
+					if (k == 3)
+					{
+						arraySet[j][k] ="DRONE,";
+					}
 		
-					double c2 = Double.parseDouble(coord2);
-					coord2 = df.format(c2);
-	
+					if (k == 4)
+					{
+						
+						// skips unnescessary columns in the csv file
+						sc.next();
+						sc.next();
+						sc.next();
+						sc.next();
+						sc.next();
+						sc.next();
+						sc.next();
+						
+						coord1 = sc.next();
+						
+						//This is set to grab the coordinates from the body
+						// If the coordinates is <100 then if statement is there so the substring will grab the values from two places
+						// y axis
+						coord1 = coord1.replace("\"bbox\":{\"top\":", "");
 					
-					coord3 = sc.next();
-					if (coord3.length() < 12)
-						coord3 = coord3.substring(9,11);
-						else
-							coord3 = coord3.substring(9,12);
+						double c1 = Double.parseDouble(coord1);
+						
+						// x axis
+						coord2 = sc.next();
+						coord2 = coord2.replace("\"left\":", "");
 			
-					double c3 = Double.parseDouble(coord3);
-					coord3 = df.format(c3);
-	
-					
-					coord4 = sc.next();
-					if (coord4.length() < 11)
-						coord4 = coord4.substring(8,10);
-						else
-							coord4 = coord4.substring(8,11);
-					
-					
-					double c4 = Double.parseDouble(coord4);
-					coord4 = df.format(c4);
-					
-					cord = "\"[" + coord1  + ", "+ coord2 + ", "+ coord3 + ", "+ coord4 + "]\" ";
-					arraySet[j][k] = cord; 
-					
-					sc.nextLine();
-					
-				}
+						double c2 = Double.parseDouble(coord2);
+
+		
+						//height
+						coord3 = sc.next();
+						coord3 = coord3.replace("\"height\":", "");
+						double c3 = Double.parseDouble(coord3);
+						//coord3 = df.format(c3);
+		
+						//width
+						coord4 = sc.next();
+						// cuts off "width:" in the txt file
+						coord4 = coord4.substring(8);
+						coord4 = coord4.replace("}", "");
+						double c4 = Double.parseDouble(coord4);
+						
+						// reformats into x,y,w,h
+						x = c1;
+						y = c2;
+						h = c4;
+						w = c3;
+						
+						double newX = (x+x+w)/2;
+						double newY = (y+y+h)/2;
+		
+						
+						coord1 = df.format(newX);
+						coord2 = df.format(newY);
+						coord3 = df.format(h);
+						coord4 = df.format(w);
+						
+						cord = "\"[" + coord2  + ", "+ coord1 + ", "+ coord3 + ", "+ coord4 + "]\" ";
+						arraySet[j][k] = cord; 
+						
+						sc.nextLine();
+						
+					}
 		
 				System.out.print(arraySet[j][k]);
 		}
-		
+
 	}
 	
-}   
+}
 	sc.close();  //closes the scanner  s
-}  
+}
 }
